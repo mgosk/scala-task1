@@ -12,11 +12,20 @@ class AuthService(db: DataBase) {
     }
   }
 
-  //provided function allow only to println to console
-  def authenticate[A](token: String, role: Role)(func: => A): Unit = {
+  def logout(token: String) = {
     db.sessions.get(token) match {
-      case Some(user) if user.roles.contains(role) => func
-      case Some(user) => println(s"Access denied. Required role: ${role.name}")
+      case Some(user) =>
+        db.sessions.remove(token)
+        println(s"User logged out")
+      case None => println("Invalid token")
+    }
+  }
+
+  //provided function allow only to println to console
+  def authenticate[A](token: String, priv: Priv)(func: => A): Unit = {
+    db.sessions.get(token) match {
+      case Some(user) if user.roles.map { role => db.privs.getOrElse(role, throw new RuntimeException("Invalid role")).contains(priv) }.exists(b => b) => func
+      case Some(user) => println(s"Access denied. Required priv: ${priv.name}")
       case None => println("Invalid token")
     }
   }

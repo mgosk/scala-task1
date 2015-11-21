@@ -4,7 +4,6 @@ version := "1.0"
 
 scalaVersion := "2.11.7"
 
+resolvers += "Pellucid Bintray" at "http://dl.bintray.com/pellucid/maven"
 
-libraryDependencies += "com.github.scopt" %% "scopt" % "3.3.0"
-
-resolvers += Resolver.sonatypeRepo("public")
+libraryDependencies += "com.pellucid" %% "sealerate" % "0.0.3"
